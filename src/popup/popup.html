@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>🍰 梧藝 WUYI 下單小幫手 (獨立視窗)</title>
+  <link rel="stylesheet" href="../content/content.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fffdfa;
+      overflow-x: hidden;
+    }
+    .wuyi-panel.wuyi-sidebar {
+      position: relative;
+      left: 0 !important;
+      right: auto !important;
+      width: 100vw;
+      height: 100vh;
+      box-shadow: none;
+      border: 2px solid #fda4af !important;
+      background: #fffdfa;
+    }
+    #wuyiHandle, #btnToggleMode, #btnPopoutWindow {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="wuyi-helper-root">
+    <!-- 主面板 -->
+    <div class="wuyi-helper-panel wuyi-panel wuyi-sidebar" id="wuyiPanel" style="transform: none;">
+      <!-- 頂部標題與控制 -->
+      <div class="wuyi-header" id="wuyiHeader">
+        <div class="wuyi-title-row">
+          <span class="wuyi-brand-badge">WUYI</span>
+          <span class="wuyi-title">下單小幫手</span>
+        </div>
+        <div class="wuyi-header-actions">
+          <button class="wuyi-icon-btn" id="btnCloseWindow" title="關閉視窗">✖</button>
+        </div>
+      </div>
+
+      <!-- 滾動內容 -->
+      <div class="wuyi-body">
+        <!-- 視窗大小切換按鈕列 (適合 27吋、MacBook 13吋、iPad 11吋、6吋手機) -->
+        <div class="wuyi-window-size-bar">
+          <span class="wuyi-size-label">📐 尺寸：</span>
+          <div class="wuyi-size-group">
+            <button type="button" class="wuyi-size-pill" data-size="phone6" title="適合 6吋手機螢幕 (340 x 580)">📱 6吋</button>
+            <button type="button" class="wuyi-size-pill" data-size="ipad" title="適合 iPad 11吋 (390 x 680)">📱 11吋</button>
+            <button type="button" class="wuyi-size-pill active" data-size="macbook" title="適合 MacBook 13吋 (460 x 760)">💻 13吋</button>
+            <button type="button" class="wuyi-size-pill" data-size="desktop" title="適合 27吋大螢幕 (560 x 880)">🖥️ 27吋</button>
+          </div>
+        </div>
+
+        <!-- 抓取動作列 -->
+        <div class="wuyi-scrape-bar">
+          <button class="wuyi-btn-primary" id="btnScrapeChat" title="抓取最新包含取貨與訂購人等完整資訊之訂單">
+            ⚡ 一鍵抓取訂單
+          </button>
+          <div class="wuyi-scrape-nav">
+            <button type="button" class="wuyi-nav-btn" id="btnPrevOrder" title="上一則符合對話 (較早)" disabled>▲</button>
+            <span class="wuyi-nav-counter" id="navCounter" title="目前選中 / 搜尋到的總數">-/-</span>
+            <button type="button" class="wuyi-nav-btn" id="btnNextOrder" title="下一則符合對話 (較新)" disabled>▼</button>
+          </div>
+          <button class="wuyi-btn-refresh" id="btnRefresh" title="重新整理抓取">
+            🔄
+          </button>
+        </div>
+
+        <!-- 圖片與訂單內容管理區 (依需求分成 1️⃣花束 與 2️⃣蛋糕 兩大部分) -->
+        <div class="wuyi-images-vertical">
+          <!-- 1. 💐花束(截圖) -->
+          <div class="wuyi-img-section-slot">
+            <div class="wuyi-slot-header">
+              <span class="wuyi-slot-title">💐花束(截圖)</span>
+              <div class="wuyi-slot-actions">
+                <button type="button" class="wuyi-btn-add-slot" data-group="flower" title="多加一個花束截圖空格">新增</button>
+                <button type="button" class="wuyi-btn-clear-slot" data-group="flower" id="btnClearFlower">清除</button>
+              </div>
+            </div>
+            <div class="wuyi-boxes-row" id="rowFlower">
+              <div class="wuyi-box-dropzone" id="boxFlower0" title="可拖曳圖片至此，或點擊選取檔案">
+                <div class="wuyi-box-placeholder">+ 圖1</div>
+              </div>
+              <div class="wuyi-box-dropzone" id="boxFlower1" title="可拖曳圖片至此，或點擊選取檔案">
+                <div class="wuyi-box-placeholder">+ 圖2</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1️⃣ 花束訂單內容 (介於花束截圖與蛋糕截圖之間) -->
+          <div class="wuyi-form-group" style="margin-top: -4px;">
+            <div class="wuyi-label-row">
+              <span class="wuyi-label">📝 1️⃣ 花束訂單內容：</span>
+              <button type="button" class="wuyi-btn-inline-copy" id="btnCopyFlowerDirect">📋 複製花束</button>
+            </div>
+            <textarea class="wuyi-textarea" id="txtFlowerOrder" rows="4" placeholder="若無花束訂單請填寫「無」..."></textarea>
+          </div>
+
+          <!-- 2. 🎂蛋糕(截圖) -->
+          <div class="wuyi-img-section-slot">
+            <div class="wuyi-slot-header">
+              <span class="wuyi-slot-title">🎂蛋糕(截圖)</span>
+              <div class="wuyi-slot-actions">
+                <button type="button" class="wuyi-btn-add-slot" data-group="cake" title="多加一個蛋糕款式截圖空格">新增</button>
+                <button type="button" class="wuyi-btn-clear-slot" data-group="cake" id="btnClearCake">清除</button>
+              </div>
+            </div>
+            <div class="wuyi-boxes-row" id="rowCake">
+              <div class="wuyi-box-dropzone" id="boxCake0" title="可拖曳圖片至此，或點擊選取檔案">
+                <div class="wuyi-box-placeholder">+ 款式1</div>
+              </div>
+              <div class="wuyi-box-dropzone" id="boxCake1" title="可拖曳圖片至此，或點擊選取檔案">
+                <div class="wuyi-box-placeholder">+ 款式2</div>
+              </div>
+              <div class="wuyi-box-dropzone" id="boxCake2" title="可拖曳圖片至此，或點擊選取檔案">
+                <div class="wuyi-box-placeholder">+ 款式3</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 🕯️蠟燭(截圖) -->
+          <div class="wuyi-img-section-slot">
+            <div class="wuyi-slot-header">
+              <span class="wuyi-slot-title">🕯️蠟燭(截圖)</span>
+              <div class="wuyi-slot-actions">
+                <button type="button" class="wuyi-btn-add-slot" data-group="addon" title="多加一個蠟燭配件截圖空格">新增</button>
+                <button type="button" class="wuyi-btn-clear-slot" data-group="addon" id="btnClearAddon">清除</button>
+              </div>
+            </div>
+            <div class="wuyi-boxes-row" id="rowAddon">
+              <div class="wuyi-box-dropzone" id="boxAddon0" title="可拖曳圖片至此，或點擊選取檔案">
+                <div class="wuyi-box-placeholder">+ 蠟燭圖</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2️⃣ 蛋糕訂單內容 (緊接在蛋糕與蠟燭截圖之後) -->
+          <div class="wuyi-form-group" style="margin-top: -4px;">
+            <div class="wuyi-label-row">
+              <span class="wuyi-label">📝 2️⃣ 蛋糕訂單內容：</span>
+              <button type="button" class="wuyi-btn-inline-copy" id="btnCopyCakeDirect">📋 複製蛋糕</button>
+            </div>
+            <textarea class="wuyi-textarea" id="txtCakeOrder" rows="7" placeholder="點擊一鍵抓取自動帶入蛋糕與取貨資訊，無蛋糕則填寫「無」..."></textarea>
+          </div>
+        </div>
+
+        <!-- 取貨標籤日期 (自動讀取並正規化為 1102 格式) -->
+        <div class="wuyi-date-tag-row">
+          <span class="wuyi-tag-title">🏷️ 標籤日期：</span>
+          <input type="text" class="wuyi-input-date-tag" id="inputDateTag" placeholder="例：1102" maxlength="10">
+          <button type="button" class="wuyi-btn-add-line-tag" id="btnAddLineTag" title="直接在 LINE 右側客戶資料新增此日期標籤">
+            ＋ 新增標籤
+          </button>
+        </div>
+
+        <!-- 金額明細預覽與編輯 -->
+        <div class="wuyi-form-group">
+          <div class="wuyi-label-row">
+            <span class="wuyi-label">💰 金額明細：</span>
+            <button type="button" class="wuyi-btn-inline-copy" id="btnCopyPricingDirect">📋 複製金額</button>
+          </div>
+          <textarea class="wuyi-textarea" id="txtPricing" rows="4" placeholder="蛋糕$...\n加購$...\n總共$..."></textarea>
+        </div>
+      </div>
+
+      <!-- 底部快捷動作按鈕 -->
+      <div class="wuyi-footer">
+        <div class="wuyi-card-copy-row">
+          <button class="wuyi-btn-action wuyi-btn-card-copy" id="btnCopyCard">
+            🖼️ 一鍵複製取貨確認小卡 (直接貼 LINE)
+          </button>
+          <button type="button" class="wuyi-btn-quick-msg" id="btnQuickMsgCake" title="按 1 下：傳送蛋糕確認訊息給客人&#10;連按 3 下：編輯自訂訊息內容">
+            🎂
+          </button>
+          <button type="button" class="wuyi-btn-quick-msg" id="btnQuickMsgFlower" title="按 1 下：傳送花束確認訊息給客人&#10;連按 3 下：編輯自訂訊息內容">
+            💐
+          </button>
+        </div>
+
+        <div class="wuyi-action-grid">
+          <button class="wuyi-btn-action" id="btnCopyOrder">
+            📋 複製備忘錄格式 (含照片與可編輯文字)
+          </button>
+          <button class="wuyi-btn-action wuyi-btn-add-note" id="btnAddLineNote" title="自動將訂單內容寫入 LINE 右側記事本">
+            📝 ＋ 新增記事本
+          </button>
+          <button class="wuyi-btn-action" id="btnDownloadCard">
+            💾 下載小卡圖檔
+          </button>
+        </div>
+      </div>
+
+      <!-- Toast 提示 -->
+      <div class="wuyi-toast" id="wuyiToast">已複製！</div>
+
+      <!-- 隱藏的檔案選擇 input -->
+      <input type="file" id="wuyiHiddenFileInput" accept="image/*" style="display:none">
+    </div>
+  </div>
+
+  <script src="../content/extractor.js"></script>
+  <script src="../content/card-renderer.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

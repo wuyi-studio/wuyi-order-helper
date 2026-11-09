@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>梧藝 WUYI 下單小幫手 | 官方下載與安裝指南</title>
+  <meta name="description" content="梧藝工作室專用訂單處理 Chrome 擴充功能，支援花束與蛋糕訂單一鍵抓取、高畫質確認單生成、Apple 備忘錄原生文字複製與多視窗切換。">
+  <link rel="icon" type="image/png" href="src/assets/icons/icon48.png">
+  <style>
+    :root {
+      --primary: #d97706;
+      --primary-hover: #b45309;
+      --accent-pink: #f43f5e;
+      --accent-purple: #9333ea;
+      --accent-purple-bg: #fae8ff;
+      --bg-cream: #faf8f5;
+      --card-bg: #ffffff;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border-color: #e5e7eb;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+      --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.03);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Hiragino Sans GB", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      background: linear-gradient(180deg, #fefaf6 0%, #f7f3ee 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 20px 80px 20px;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      background: #fff;
+      border: 1px solid #fed7aa;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #c2410c;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #111827;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 620px;
+      margin: 0 auto 32px auto;
+    }
+
+    /* Action Hero Card */
+    .hero-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 36px 32px;
+      text-align: center;
+      box-shadow: var(--shadow-xl);
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #f59e0b, #ec4899, #a855f7);
+    }
+
+    .version-tag {
+      display: inline-block;
+      font-size: 12px;
+      background: #f3f4f6;
+      color: #4b5563;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ea580c 0%, #d97706 100%);
+      color: #ffffff;
+      box-shadow: 0 8px 16px rgba(234, 88, 12, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #c2410c 0%, #b45309 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 20px rgba(234, 88, 12, 0.35);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
+
+    .btn-secondary:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+      transform: translateY(-2px);
+    }
+
+    .file-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Section Styling */
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: #fef3c7;
+      color: #b45309;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    /* Step Guide */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 9999px;
+      background: #111827;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .step-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .step-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .step-card code {
+      display: inline-block;
+      background: #f3f4f6;
+      color: #1f2937;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-top: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .highlight-badge {
+      display: inline-block;
+      background: var(--accent-purple-bg);
+      color: var(--accent-purple);
+      font-weight: 600;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-top: 6px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 13px;
+      color: #9ca3af;
+      padding-top: 32px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    footer a {
+      color: #6b7280;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="brand-badge">🌸 梧藝工作室 WUYI Studio</div>
+      <h1>梧藝下單小幫手</h1>
+      <p class="subtitle">為 LINE 官方帳號後台量身打造的高效訂單工具。花束與蛋糕分區抓取、原尺寸圖片截圖、100% 可編輯 Apple 備忘錄格式與一鍵生成高畫質確認小卡。</p>
+    </header>
+
+    <!-- Download Hero Card -->
+    <div class="hero-card">
+      <div class="version-tag">最新穩定版本：v2.5.0 (2026 最新版)</div>
+      <div class="btn-group">
+        <a href="wuyi-order-helper.zip" download="wuyi-order-helper.zip" class="btn btn-primary" id="btnDownload">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          立即下載小幫手 (.zip)
+        </a>
+        <a href="https://github.com/wuyi-studio/wuyi-order-helper" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          GitHub 原始碼庫
+        </a>
+      </div>
+      <div class="file-meta">📦 檔案格式：ZIP 壓縮包（解壓縮後即可在 Chrome 載入） · 大小：約 75 KB</div>
+    </div>
+
+    <!-- Installation Steps -->
+    <div class="section-title">
+      <span>🛠️</span> 四步驟快速安裝指南
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>下載並解壓縮</h3>
+        <p>點擊上方「立即下載小幫手」按鈕取得 <code>wuyi-order-helper.zip</code>，在電腦中點兩下解壓縮出資料夾。</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>開啟擴充功能管理頁</h3>
+        <p>開啟 Google Chrome 瀏覽器，在網址列直接輸入並前往：<br><code>chrome://extensions/</code></p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>開啟開發人員模式</h3>
+        <p>在擴充功能管理頁面的右上角，將<b>「開發人員模式」（Developer mode）</b>開關開啟。</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h3>載入未打包項目</h3>
+        <p>點選頁面左上角<b>「載入未打包項目」</b>，選擇剛才解壓縮的資料夾即安裝完成！</p>
+      </div>
+    </div>
+
+    <!-- Core Features -->
+    <div class="section-title">
+      <span>✨</span> 功能特色亮點
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">💐🎂</div>
+        <h3>花束與蛋糕分區抓取</h3>
+        <p>一鍵抓取對話中花束與蛋糕項目，自動分區排版，無花束自動隱藏，讓訂單一目了然。</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Apple 備忘錄 100% 可編輯複製</h3>
+        <p>原生富文本格式複製到 Apple 備忘錄後，字體維持小卡風格，且文字可隨意點選修改。<br>
+        <span class="highlight-badge">需加購項目自動粉紫色螢光高亮</span></p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🖼️</div>
+        <h3>所見即所得確認小卡</h3>
+        <p>圖框顯示等於輸出圖片！支援花束、蛋糕與蠟燭圖片並排，支援一鍵複製圖片與直接下載 PNG。</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🖥️</div>
+        <h3>四種視窗自適應尺寸</h3>
+        <p>支援獨立小視窗切換，提供 27 吋 Mac、13 吋 MacBook、11 吋 iPad 及 6 吋超小視窗極致排版。</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <h3>快捷傳送與小卡自訂</h3>
+        <p>一鍵複製取貨小卡右側提供 🎂、💐 快捷鍵，點按即自動填寫訊息，連按三下可直接編輯常用文字。</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🏷️</div>
+        <h3>日期標籤與金額明細</h3>
+        <p>智慧標籤支援多重日期新增，金額加總明細放置於電話下方，資訊完整無遺漏。</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>梧藝工作室 WUYI Studio © 2026 · 專為訂單流程設計之專利輔助系統</p>
+      <p style="margin-top: 6px;">如有任何使用問題，請洽工作室內部管理員或參閱 <a href="https://github.com/wuyi-studio/wuyi-order-helper">GitHub 專案說明</a>。</p>
+    </footer>
+  </div>
+
+  <script>
+    // 檢查若透過非本機伺服器開啟且 zip 存在時的提示
+    document.getElementById('btnDownload').addEventListener('click', function() {
+      console.log('Starting download: wuyi-order-helper.zip');
+    });
+  </script>
+</body>
+</html>

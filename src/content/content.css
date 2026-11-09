@@ -1,0 +1,829 @@
+/* 梧藝 WUYI 下單小幫手 - 側邊欄與浮動面板樣式 (Scoped) */
+
+#wuyi-helper-root {
+  all: initial;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  font-size: 14px;
+  color: #1e293b;
+  box-sizing: border-box;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  z-index: 2147483647 !important;
+}
+
+#wuyi-helper-root > * {
+  pointer-events: auto !important;
+}
+
+#wuyi-helper-root *, #wuyi-helper-root *::before, #wuyi-helper-root *::after {
+  box-sizing: border-box;
+}
+
+/* 1. 右側懸浮把手 (Handle Pill) - 位於畫面右側，醒目溫暖烘焙色系，保證永遠可見不被覆蓋 */
+.wuyi-handle-pill {
+  position: fixed !important;
+  right: 0 !important;
+  left: auto !important;
+  top: 40% !important;
+  transform: translateY(-50%) !important;
+  background: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%) !important;
+  color: #ffffff !important;
+  padding: 10px 16px !important;
+  border-radius: 20px 0 0 20px !important;
+  cursor: pointer !important;
+  box-shadow: -2px 4px 16px rgba(244, 63, 94, 0.45) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.25s ease !important;
+  user-select: none !important;
+  z-index: 2147483647 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.wuyi-handle-pill:hover {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important;
+  padding-left: 20px !important;
+  box-shadow: -4px 6px 20px rgba(225, 29, 72, 0.55) !important;
+}
+
+.wuyi-handle-pill.wuyi-handle-pill-active {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+  box-shadow: -3px 5px 18px rgba(190, 18, 60, 0.5) !important;
+}
+
+/* 2. 主面板容器 (淡紅色視窗框風格) */
+.wuyi-panel {
+  position: fixed;
+  background: #fffdfa;
+  box-shadow: 0 10px 30px rgba(244, 63, 94, 0.16);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  overflow: hidden;
+  z-index: 9999999;
+  border: 2px solid #fda4af;
+}
+
+/* 側欄模式 (Sidebar Mode) - 展開於畫面最左側 */
+.wuyi-panel.wuyi-sidebar {
+  left: 0;
+  right: auto;
+  top: 0;
+  bottom: 0;
+  width: 380px;
+  height: 100vh;
+  border-right: 2px solid #fda4af;
+  border-left: none;
+}
+
+.wuyi-panel.wuyi-sidebar.wuyi-closed {
+  transform: translateX(-105%);
+}
+
+/* 頁面右推模式：當左側小幫手側欄開啟時，自動將原頁面往右推 380px，絕不覆蓋 LINE 頁面內容 */
+body.wuyi-sidebar-open {
+  margin-left: 380px !important;
+  width: calc(100vw - 380px) !important;
+  max-width: calc(100vw - 380px) !important;
+  box-sizing: border-box !important;
+  transition: margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1), width 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* 浮動視窗模式 (Floating Mode) */
+.wuyi-panel.wuyi-floating {
+  width: 440px;
+  max-height: 88vh;
+  border-radius: 16px;
+  border: 2px solid #fda4af;
+  box-shadow: 0 12px 36px rgba(244, 63, 94, 0.18);
+}
+
+.wuyi-panel.wuyi-floating.wuyi-closed {
+  display: none;
+}
+
+/* 3. 面板頂部 (Header / 淡紅色系視窗框，非黑色無壓迫感) */
+.wuyi-header {
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+  border-bottom: 2px solid #fecdd3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.wuyi-floating .wuyi-header {
+  cursor: move;
+}
+
+.wuyi-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wuyi-brand-badge {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(234, 88, 12, 0.25);
+}
+
+.wuyi-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #7c2d12;
+}
+
+.wuyi-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wuyi-icon-btn {
+  background: #ffffff;
+  border: 1px solid #fed7aa;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #9a3412;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.wuyi-icon-btn:hover {
+  background: #ffedd5;
+  border-color: #fdba74;
+}
+
+/* 4. 滾動內容區 */
+.wuyi-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 視窗大小切換列 (適合 27吋、MacBook 13吋、iPad 11吋) */
+.wuyi-window-size-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fdfaf5;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  padding: 6px 10px;
+  gap: 6px;
+}
+
+.wuyi-size-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #7c2d12;
+  white-space: nowrap;
+}
+
+.wuyi-size-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wuyi-size-pill {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.wuyi-size-pill:hover {
+  background: #ffedd5;
+  border-color: #f97316;
+  color: #9a3412;
+}
+
+.wuyi-size-pill.active {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  border-color: #ea580c;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(234, 88, 12, 0.3);
+}
+
+/* 頂部抓取動作列 */
+.wuyi-scrape-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wuyi-btn-primary {
+  flex: 1;
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: background 0.2s ease;
+}
+
+.wuyi-btn-primary:hover {
+  background: #0369a1;
+}
+
+.wuyi-scrape-nav {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 3px 5px;
+}
+
+.wuyi-nav-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 6px 7px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.wuyi-nav-btn:hover:not(:disabled) {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+.wuyi-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.wuyi-nav-counter {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  min-width: 28px;
+  text-align: center;
+}
+
+.wuyi-btn-refresh {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.wuyi-btn-refresh:hover {
+  background: #e2e8f0;
+}
+
+/* 圖片預覽卡槽區 (上下垂直排列：花束2框、蛋糕3框、蠟燭1框) */
+.wuyi-images-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wuyi-img-section-slot {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wuyi-slot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wuyi-slot-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.wuyi-slot-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wuyi-btn-add-slot,
+.wuyi-btn-add-img {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  color: #166534;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.wuyi-btn-add-slot:hover,
+.wuyi-btn-add-img:hover {
+  background: #dcfce7;
+  border-color: #22c55e;
+  color: #15803d;
+}
+
+.wuyi-btn-clear-slot {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.wuyi-btn-clear-slot:hover {
+  background: #fee2e2;
+  border-color: #f87171;
+  color: #b91c1c;
+}
+
+/* 橫排圖框容器 (支援新增多空格自動換行與彈性寬度) */
+.wuyi-boxes-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+.wuyi-box-dropzone {
+  flex: 1 1 calc(33.333% - 8px);
+  min-width: 76px;
+  height: 84px;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.wuyi-box-dropzone:hover {
+  border-color: #94a3b8;
+}
+
+.wuyi-box-dropzone.wuyi-drag-over {
+  border-color: #8b5cf6 !important;
+  background: #f5f3ff !important;
+  transform: scale(1.03);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+}
+
+.wuyi-box-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.wuyi-box-dropzone.wuyi-has-image {
+  cursor: grab;
+}
+
+.wuyi-box-dropzone.wuyi-dragging {
+  opacity: 0.45;
+  cursor: grabbing;
+}
+
+.wuyi-box-dropzone[draggable="true"] {
+  cursor: grab;
+}
+
+.wuyi-box-dropzone[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.wuyi-box-dropzone.wuyi-dragging {
+  opacity: 0.35;
+  border: 2px dashed #0284c7 !important;
+}
+
+.wuyi-box-dropzone.wuyi-drag-over {
+  border-color: #0284c7 !important;
+  background: #e0f2fe !important;
+  box-shadow: 0 0 0 2px #0284c7;
+}
+
+.wuyi-box-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 4px 6px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.wuyi-box-dropzone:hover .wuyi-box-overlay {
+  opacity: 1;
+}
+
+.wuyi-box-actions-left {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  pointer-events: auto;
+}
+
+.wuyi-box-btn-shift {
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  transition: all 0.12s ease;
+  padding: 0;
+}
+
+.wuyi-box-btn-shift:hover {
+  background: #0284c7;
+  border-color: #38bdf8;
+  transform: scale(1.15);
+}
+
+.wuyi-box-move-hint {
+  font-size: 9px;
+  color: #ffffff;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 2px 4px;
+  border-radius: 4px;
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.wuyi-box-btn-del {
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: transform 0.1s;
+}
+
+.wuyi-box-btn-del:hover {
+  transform: scale(1.15);
+  background: #dc2626;
+}
+
+.wuyi-box-placeholder {
+  color: #94a3b8;
+  font-size: 11px;
+  text-align: center;
+  line-height: 1.4;
+  padding: 4px;
+}
+
+/* 標籤日期編輯列 */
+.wuyi-date-tag-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.wuyi-tag-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.wuyi-input-date-tag {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #6b21a8;
+  outline: none;
+}
+
+.wuyi-input-date-tag:focus {
+  border-color: #9333ea;
+  box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.2);
+}
+
+.wuyi-btn-add-line-tag {
+  background: #06C755;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 1px 3px rgba(6, 199, 85, 0.35);
+  transition: all 0.15s ease;
+}
+
+.wuyi-btn-add-line-tag:hover {
+  background: #05b34c;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(6, 199, 85, 0.45);
+}
+
+.wuyi-btn-add-line-tag:active {
+  transform: translateY(0);
+}
+
+/* 表單與欄位 */
+.wuyi-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wuyi-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wuyi-label {
+  font-weight: 600;
+  font-size: 12px;
+  color: #475569;
+}
+
+.wuyi-btn-inline-copy {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0284c7;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.wuyi-btn-inline-copy:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+.wuyi-textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #1e293b;
+  font-family: inherit;
+  resize: vertical;
+  background: #fdfdfd;
+}
+
+.wuyi-textarea:focus {
+  outline: none;
+  border-color: #0284c7;
+  background: #ffffff;
+}
+
+.wuyi-highlight-tag {
+  background-color: #f3e8ff;
+  color: #7e22ce;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* 5. 底部固定操作按鈕列 */
+.wuyi-footer {
+  padding: 14px 16px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wuyi-action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.wuyi-btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.wuyi-btn-action:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+/* 一鍵複製小卡與快速訊息按鈕列 */
+.wuyi-card-copy-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.wuyi-card-copy-row .wuyi-btn-card-copy {
+  flex: 1;
+  margin-bottom: 0 !important;
+}
+
+.wuyi-btn-quick-msg {
+  background: #ffffff;
+  border: 1.5px solid #fed7aa;
+  border-radius: 8px;
+  width: 44px;
+  height: 42px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.wuyi-btn-quick-msg:hover {
+  background: #ffedd5;
+  border-color: #f97316;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(249, 115, 22, 0.25);
+}
+
+.wuyi-btn-quick-msg:active {
+  transform: translateY(1px);
+}
+
+.wuyi-btn-card-copy {
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 11px;
+}
+
+.wuyi-btn-card-copy:hover {
+  background: #059669;
+}
+
+.wuyi-btn-add-note {
+  border-color: #86efac;
+  color: #15803d;
+  background: #f0fdf4;
+}
+
+.wuyi-btn-add-note:hover {
+  background: #dcfce7;
+  border-color: #22c55e;
+  color: #166534;
+}
+
+/* 6. Toast 動畫提示條 */
+.wuyi-toast {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(15, 23, 42, 0.92);
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 10000000;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.wuyi-toast.wuyi-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

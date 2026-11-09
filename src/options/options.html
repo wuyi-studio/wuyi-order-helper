@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>梧藝 WUYI 下單小幫手 - 設定</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand">WUYI 梧藝</div>
+      <h1>下單小幫手 擴充功能設定</h1>
+      <p class="subtitle">設定 Google 試算表同步與門市預設參數</p>
+    </div>
+
+    <div class="card">
+      <h2>📊 Google 試算表 Webhook 設定</h2>
+      <p class="desc">
+        將下單資訊即時同步至 Google 試算表（依年份/月份分頁儲存，並自動對齊 20 項標準核帳欄位）。
+      </p>
+
+      <div class="form-group">
+        <label for="webhookUrl">Google Apps Script Web App 網址：</label>
+        <input type="url" id="webhookUrl" placeholder="https://script.google.com/macros/s/.../exec">
+      </div>
+
+      <div class="actions">
+        <button id="btnSave" class="btn btn-primary">儲存設定</button>
+        <button id="btnTest" class="btn btn-secondary">測試連線</button>
+      </div>
+
+      <div id="statusMessage" class="status-msg"></div>
+    </div>
+
+    <div class="card help-card">
+      <h2>📖 Google Apps Script 部署 3 步驟教學</h2>
+      <ol>
+        <li>打開您的 Google 試算表，點擊上方選單 <strong>「擴充功能」 ➔ 「Apps Script」</strong>。</li>
+        <li>將本擴充功能目錄中 <code>google-apps-script/Code.gs</code> 的完整程式碼複製並貼上取代原本內容。</li>
+        <li>點擊右上角 <strong>「部署」 ➔ 「新增部署」</strong>：
+          <ul>
+            <li>種類選擇：<strong>「網頁應用程式 (Web App)」</strong></li>
+            <li>執行身分：<strong>「我」</strong></li>
+            <li>誰可以存取：<strong>「所有人 (Anyone)」</strong></li>
+          </ul>
+          部署完成後複製該 <strong>網頁應用程式網址</strong> 並貼到上方欄位儲存即可！
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

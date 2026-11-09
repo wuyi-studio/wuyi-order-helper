@@ -1,0 +1,74 @@
+{
+  "manifest_version": 3,
+  "name": "梧藝 WUYI 下單小幫手",
+  "version": "1.0.1",
+  "description": "梧藝 WUYI LINE 官方帳號客服下單小幫手 - 一鍵抓取訂單文字、合成取貨確認小卡、格式化備忘錄與試算表同步",
+  "icons": {
+    "16": "src/assets/icons/icon16.png",
+    "48": "src/assets/icons/icon48.png",
+    "128": "src/assets/icons/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "src/assets/icons/icon16.png",
+      "48": "src/assets/icons/icon48.png",
+      "128": "src/assets/icons/icon128.png"
+    },
+    "default_title": "點擊切換 梧藝下單小幫手"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "clipboardWrite",
+    "scripting",
+    "downloads"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "https://*.line.biz/*",
+    "https://chat-content.line.biz/*",
+    "https://chat.line.biz/*",
+    "https://manager.line.biz/*",
+    "https://*.line-scdn.net/*",
+    "https://*.line.me/*",
+    "https://*.googleusercontent.com/*",
+    "https://lh3.googleusercontent.com/*",
+    "https://lh5.googleusercontent.com/*",
+    "https://script.google.com/*",
+    "https://script.googleusercontent.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.line.biz/*",
+        "https://manager.line.biz/*"
+      ],
+      "js": [
+        "src/content/extractor.js",
+        "src/content/card-renderer.js",
+        "src/content/content.js"
+      ],
+      "css": [
+        "src/content/content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/content/*",
+        "src/popup/*",
+        "src/assets/*"
+      ],
+      "matches": [
+        "https://chat.line.biz/*",
+        "https://manager.line.biz/*"
+      ]
+    }
+  ],
+  "options_page": "src/options/options.html"
+}
