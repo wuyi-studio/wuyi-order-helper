@@ -52,10 +52,10 @@ const Extractor = {
     // 4. 訂購人 LINE 名稱 (例：訂購人 LINE 名稱：言均、訂購人的 LINE 名稱、LINE 名稱)
     const hasLineName = /(?:訂購人(?:的)?\s*)?(?:LINE|line)\s*名稱/i.test(text);
 
-    // 5. 訂購人姓名 (例：訂購人姓名：潘言均、姓名：潘言均)
+    // 5. 訂購人姓名 (例：訂購人姓名：陳一二、姓名：陳一二)
     const hasCustomerName = /訂購人姓名|訂購人\s*姓名/.test(text) || (/(?:訂購人)?姓名\s*[：:]/.test(text) && !/LINE\s*名稱/i.test(text));
 
-    // 6. 訂購人電話 (例：訂購人電話：0970411157、電話：0970411157)
+    // 6. 訂購人電話 (例：訂購人電話：0988888888、電話：0988888888)
     const hasCustomerPhone = /訂購人電話|訂購人\s*電話/.test(text) || /(?:訂購人|聯絡)?電話\s*[：:]/.test(text);
 
     return Boolean(hasPickupDate && hasPickupTime && hasPickupLocation && hasLineName && hasCustomerName && hasCustomerPhone);
